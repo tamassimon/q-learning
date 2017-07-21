@@ -1,3 +1,7 @@
+__author__ = "Tamas Simon"
+__copyright__ = "Copyright 2017, Tamas Simon"
+__license__ = "GPLv3"
+
 NUMBER_OF_STEPS_WHEN_WALL_MOVES = 1000
 NUMBER_OF_ACTIONS = 4
 START_X = 3

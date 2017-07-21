@@ -1,6 +1,10 @@
 from unittest import TestCase
 import Environment
 
+__author__ = "Tamas Simon"
+__copyright__ = "Copyright 2017, Tamas Simon"
+__license__ = "GPLv3"
+
 
 class TestGridWorldModel(TestCase):
     def test_state_to_xy(self):

@@ -2,6 +2,10 @@ from Environment import GridWorldModel
 import random
 import numpy as np
 
+__author__ = "Tamas Simon"
+__copyright__ = "Copyright 2017, Tamas Simon"
+__license__ = "GPL v3"
+
 GAMMA = 0.95  # discount factor
 EPLSILON = 0.6  # greedyness
 ALPHA = 0.5  # learning rate, 0 < alpha <= 1

@@ -5,6 +5,10 @@ import itertools
 import Agent
 import numpy as np
 
+__author__ = "Tamas Simon"
+__copyright__ = "Copyright 2017, Tamas Simon"
+__license__ = "GPLv3"
+
 
 class MockEnvironment(object):
     pass

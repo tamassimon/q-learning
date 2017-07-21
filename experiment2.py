@@ -6,6 +6,9 @@ import numpy as np
 from Agent import Agent
 from Environment import GridWorldModel
 
+__author__ = "Tamas Simon"
+__copyright__ = "Copyright 2017, Tamas Simon"
+__license__ = "GPLv3"
 
 REWARDS_KEY = 'rewards'
 Q_SHARED_KEY = 'q'
