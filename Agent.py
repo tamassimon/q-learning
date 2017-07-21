@@ -25,6 +25,8 @@ class Agent:
         # when there are multiple options with the same Q value then choose among them randomly
         best_actions = np.argwhere(self.Q[self.state] == np.amax(self.Q[self.state]))
         return random.choice(best_actions.flatten().tolist())
+        # deterministic would be:
+        # return np.argmax(self.Q[self.state])
 
     def act(self):
         dice = random.random()
