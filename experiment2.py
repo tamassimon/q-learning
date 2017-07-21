@@ -10,6 +10,10 @@ __author__ = "Tamas Simon"
 __copyright__ = "Copyright 2017, Tamas Simon"
 __license__ = "GPLv3"
 
+# This experiment implements asynchronous Q-learning.
+# It's using the multiprocessing package from the standard library.
+# State is shared between the processes using a Manager server process; this provides a dictionary.
+# These are the keys used in the dictionary to share rewards and the Q(s,a) matrix among processes.
 REWARDS_KEY = 'rewards'
 Q_SHARED_KEY = 'q'
 
@@ -19,10 +23,10 @@ MAX_STEPS_PER_AGENT = 10000
 ASYNC_UPDATE_INTERVAL = 5
 
 
-def agent_loop(dict, lock1, lock2):
+def agent_loop(dictionary, lock1, lock2):
     environment = GridWorldModel()
     agent = Agent(environment)
-    agent.Q = dict[Q_SHARED_KEY]  # initialize with shared Q
+    agent.Q = dictionary[Q_SHARED_KEY]  # initialize with shared Q
 
     while environment.step_count < MAX_STEPS_PER_AGENT:
         environment.reset()
@@ -31,9 +35,9 @@ def agent_loop(dict, lock1, lock2):
             agent.act()
             if environment.step_count % ASYNC_UPDATE_INTERVAL == 0 or environment.is_terminal_state():
                 lock1.acquire()
-                Q = dict[Q_SHARED_KEY]
-                # need to write it back, otherwise the proxy won't pick up the changes
-                dict[Q_SHARED_KEY] = np.add(Q, agent.dQ)
+                q = dictionary[Q_SHARED_KEY]
+                # Need to write it back, otherwise the proxy won't pick up the changes.
+                dictionary[Q_SHARED_KEY] = np.add(q, agent.dQ)
                 lock1.release()
                 agent.dQ = np.zeros((GridWorldModel.get_number_of_states(), GridWorldModel.get_number_of_actions()),
                                     dtype=float)
@@ -41,16 +45,16 @@ def agent_loop(dict, lock1, lock2):
                 break
 
     lock2.acquire()
-    combined_rewards = dict[REWARDS_KEY]
+    combined_rewards = dictionary[REWARDS_KEY]
     agents_rewards = np.array(agent.rewards)
-    # same here
-    dict[REWARDS_KEY] = np.add(combined_rewards, agents_rewards[:MAX_STEPS_PER_AGENT])
+    # ...same here
+    dictionary[REWARDS_KEY] = np.add(combined_rewards, agents_rewards[:MAX_STEPS_PER_AGENT])
     lock2.release()
 
 
 def run_process_pool(process_count=MAX_PROCESS_COUNT):
-    Q_shared = np.zeros((GridWorldModel.get_number_of_states(), GridWorldModel.get_number_of_actions()), dtype=float)
-    d[Q_SHARED_KEY] = Q_shared
+    q_shared = np.zeros((GridWorldModel.get_number_of_states(), GridWorldModel.get_number_of_actions()), dtype=float)
+    d[Q_SHARED_KEY] = q_shared
     d[REWARDS_KEY] = np.zeros(MAX_STEPS_PER_AGENT)
     pool = Pool(processes=process_count)
     for i in xrange(process_count):
@@ -59,6 +63,10 @@ def run_process_pool(process_count=MAX_PROCESS_COUNT):
     pool.join()
     return np.cumsum(d[REWARDS_KEY]) / process_count
 
+# Runs asynchronous Q-learning two times.
+# First with a process pool of MAX_PROCESS_COUNT processes, then with a pool of MIN_PROCESS_COUNT.
+# The average reward among processes over time is collected and plotted to demonstrate that more processes
+# aka more agents learning in parallel and sharing their learning leads to faster learning.
 
 if __name__ == '__main__':
     manager = Manager()

@@ -52,11 +52,17 @@ class GridWorldModel:
     def is_terminal_state(self):
         return self.x == GOAL_X and self.y == GOAL_Y
 
-    # actions
-    # when trying to move past the edge remain where it was
-
     def take_action(self, action):
-        """ performs the action and returns the reward and the new state"""
+        """Take an action and calculate the reward and the next state it leads to.
+
+        Checks if the action is valid, i.e. the agent would not try to go past the edges of the grid
+        and would not hit a wall. Invalid actions just lead to the same state as before.
+
+        Only reaching the goal cell returns a reward of 1, everything else returns 0 reward.
+
+        :param action: int
+        :return: reward: int, new_state: int
+        """
         self.step_count += 1
         delta_x, delta_y = GridWorldModel.action_from_ndx(action)
         if not self.would_fall_off(delta_x, delta_y) and not self.would_hit_wall(delta_x, delta_y):

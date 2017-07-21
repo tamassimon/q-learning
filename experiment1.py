@@ -22,6 +22,7 @@ def plot_results():
     plt.xlabel('Episodes')
     plt.show()
 
+# Iterate through a number of episodes (set by MAX_EPISODES) and plot the results.
 
 if __name__ == '__main__':
     environment = GridWorldModel()
