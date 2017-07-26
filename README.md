@@ -129,4 +129,4 @@ I implemented the asynchronous Q-learning algorithm using [multiprocessing packa
 
 The experiment runs two process pools, first with 2 processes, then with 32 processes - to demonstrate the improvement in learning when there are more processes learning asynchronously.
 
-![Asynchronous Q-learning](plots/async.png)
+![Asynchronous Q-learning](plots/async_bugfix_random_seed.png)
