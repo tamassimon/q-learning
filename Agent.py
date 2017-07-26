@@ -36,9 +36,9 @@ class Agent:
         # Implement epsilon greedy policy.
         dice = random.random()
         if dice < EPSILON:
-            action = self.explore()
-        else:
             action = self.exploit()
+        else:
+            action = self.explore()
 
         # Take action.
         reward, new_state = self.environment.take_action(action)
