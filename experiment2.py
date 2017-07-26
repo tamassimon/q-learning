@@ -2,6 +2,7 @@ from multiprocessing import Manager, Pool
 
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 from Agent import Agent
 from Environment import GridWorldModel
@@ -24,6 +25,7 @@ ASYNC_UPDATE_INTERVAL = 5
 
 
 def agent_loop(dictionary, lock1, lock2):
+    random.seed()
     environment = GridWorldModel()
     agent = Agent(environment)
     agent.Q = dictionary[Q_SHARED_KEY]  # initialize with shared Q
